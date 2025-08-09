@@ -13,8 +13,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* ✅ Optional — apply border globally using raw CSS (if really needed) */
-* {
-  border-color: rgb(229 231 235); /* Replace with actual Tailwind color */
-}
