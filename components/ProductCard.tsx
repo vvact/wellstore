@@ -1,61 +1,42 @@
-'use client';
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import type { Product } from '@/types';
+import React from "react";
+import Link from "next/link";
+import { Product } from "@/types";
 
 interface ProductCardProps {
   product: Product;
+  premium?: boolean;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const hasDiscount = product.discounted_price < parseFloat(product.original_price);
+  const { id, name, slug, base_price, discount_price, featured_image, premium } = product;
 
   return (
-    <div className="flex flex-col border rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300 max-w-sm">
-      <img
-        src={product.main_image}
-        alt={product.name}
-        className="h-48 w-full object-cover"
-      />
+    <Link
+      href={`/products/${slug}`}
+      className="group bg-white rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100 flex flex-col h-full"
+    >
+      <div className="flex-grow flex items-center justify-center bg-gray-50 p-8 min-h-[300px]">
+        <img
+          src={featured_image ?? "https://via.placeholder.com/500x500?text=Product+Image"}
+          alt={name}
+          className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+          loading="lazy"
+        />
+      </div>
 
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-lg font-semibold mb-1">{product.name}</h3>
-        <p className="text-sm text-muted-foreground mb-2">{product.category.name}</p>
-
-        {/* Breadcrumbs */}
-        <nav className="text-xs text-blue-600 mb-3">
-          {product.category.breadcrumbs.map((crumb, i) => (
-            <span key={i}>
-              <a href={crumb.path} className="hover:underline">{crumb.label}</a>
-              {i < product.category.breadcrumbs.length - 1 && ' > '}
-            </span>
-          ))}
-        </nav>
-
-        <div className="mt-auto">
-          {hasDiscount ? (
-            <div className="flex items-center space-x-2">
-              <span className="line-through text-muted-foreground">
-                KShs {product.original_price}
-              </span>
-              <span className="text-red-600 font-bold">
-                KShs {product.discounted_price}
-              </span>
+      <div className="p-4 border-t border-gray-100">
+        <h3 className="text-gray-900 font-medium text-lg mb-2 line-clamp-2 min-h-[3rem]">{name}</h3>
+        <div className="mt-2">
+          {discount_price ? (
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold text-gray-900">KShs {discount_price}</span>
+              <span className="text-sm text-gray-400 line-through">KShs {base_price}</span>
             </div>
           ) : (
-            <span className="font-bold text-lg">KShs {product.price}</span>
+            <span className="text-xl font-bold text-gray-900">KShs {base_price}</span>
           )}
-
-          <p className={`mt-2 text-sm font-medium ${product.in_stock ? 'text-green-600' : 'text-red-600'}`}>
-            {product.stock_status}
-          </p>
         </div>
-
-        <Button className="mt-4" variant="outline" size="sm">
-          Add to Cart
-        </Button>
       </div>
-    </div>
+    </Link>
   );
 }

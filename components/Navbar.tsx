@@ -1,159 +1,187 @@
-// components/Navbar.tsx
 "use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { 
-  Search, 
-  ShoppingBag, 
-  Heart, 
-  Package, 
-  User, 
-  Menu, 
-  X 
-} from 'react-feather';
+import { useState } from "react";
+import Link from "next/link";
+import { FiUser, FiShoppingCart, FiMenu, FiX, FiSearch } from "react-icons/fi";
 
-const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const cartItemCount = 3; // example count, replace with dynamic data
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-white'}`}>
-      {/* Mobile top bar */}
-      <div className="md:hidden">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center space-x-4">
-            <button onClick={toggleMenu} className="text-gray-700">
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-            <Link href="/" className="text-xl font-bold text-gray-900">
-              Logo
-            </Link>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <button onClick={toggleSearch} className="text-gray-700">
-              <Search size={20} />
-            </button>
-            <Link href="/shop" className="text-gray-700">
-              <ShoppingBag size={20} />
-            </Link>
-          </div>
-        </div>
-        
-        {/* Mobile search bar */}
-        {isSearchOpen && (
-          <div className="px-4 pb-3">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-full rounded-full border border-gray-300 py-2 pl-10 pr-4 focus:border-blue-500 focus:outline-none"
-              />
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
-        )}
-      </div>
+    <nav className="bg-white shadow-md fixed w-full z-50">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="text-2xl font-bold text-gray-800">
+          BoutiqueMen
+        </Link>
 
-      {/* Desktop navbar */}
-      <div className="hidden md:block">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-4">
-            {/* Logo */}
-            <Link href="/" className="text-2xl font-bold text-gray-900">
-              Logo
+        {/* Desktop nav links */}
+        <ul className="hidden md:flex space-x-6 text-gray-700 font-medium">
+          <li>
+            <Link href="/" className="hover:text-gray-900">
+              Home
             </Link>
-            
-            {/* Search bar */}
-            <div className="mx-4 flex flex-1 max-w-2xl">
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="w-full rounded-full border border-gray-300 py-2 pl-10 pr-4 focus:border-blue-500 focus:outline-none"
-                />
-                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
-            
-            {/* Navigation links */}
-            <nav className="flex items-center space-x-6">
-              <Link href="/shop" className="flex flex-col items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                <ShoppingBag size={20} className="mb-1" />
-                <span>Shop</span>
-              </Link>
-              <Link href="/wishlist" className="flex flex-col items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                <Heart size={20} className="mb-1" />
-                <span>Wishlist</span>
-              </Link>
-              <Link href="/orders" className="flex flex-col items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                <Package size={20} className="mb-1" />
-                <span>Orders</span>
-              </Link>
-              <Link href="/login" className="flex flex-col items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                <User size={20} className="mb-1" />
-                <span>Login</span>
-              </Link>
-            </nav>
-          </div>
+          </li>
+          <li>
+            <Link href="/shop" className="hover:text-gray-900">
+              Shop
+            </Link>
+          </li>
+          <li className="relative group">
+            <button className="hover:text-gray-900">Categories</button>
+            {/* Dropdown on hover */}
+            <ul className="absolute left-0 mt-2 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto">
+              <li>
+                <Link
+                  href="/category/shirts"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  Shirts
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/category/shoes"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  Shoes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/category/accessories"
+                  className="block px-4 py-2 hover:bg-gray-100"
+                >
+                  Accessories
+                </Link>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <Link href="/about" className="hover:text-gray-900">
+              About
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact" className="hover:text-gray-900">
+              Contact
+            </Link>
+          </li>
+        </ul>
+
+        {/* Right icons */}
+        <div className="flex items-center space-x-4">
+          {/* Search icon */}
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="text-gray-700 hover:text-gray-900 focus:outline-none"
+            aria-label="Search"
+          >
+            <FiSearch size={20} />
+          </button>
+
+          {/* User icon */}
+          <Link href="/login" className="text-gray-700 hover:text-gray-900">
+            <FiUser size={20} />
+          </Link>
+
+          {/* Cart icon with badge */}
+          <Link href="/cart" className="relative text-gray-700 hover:text-gray-900">
+            <FiShoppingCart size={20} />
+            {cartItemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </Link>
+
+          {/* Mobile menu toggle */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden text-gray-700 hover:text-gray-900 focus:outline-none"
+            aria-label="Toggle Menu"
+          >
+            {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </button>
         </div>
       </div>
 
       {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg">
-          <div className="flex flex-col py-4">
-            <Link 
-              href="/shop" 
-              className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100"
-              onClick={toggleMenu}
-            >
-              <ShoppingBag size={18} className="mr-3" />
-              <span>Shop</span>
-            </Link>
-            <Link 
-              href="/wishlist" 
-              className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100"
-              onClick={toggleMenu}
-            >
-              <Heart size={18} className="mr-3" />
-              <span>Wishlist</span>
-            </Link>
-            <Link 
-              href="/orders" 
-              className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100"
-              onClick={toggleMenu}
-            >
-              <Package size={18} className="mr-3" />
-              <span>Orders</span>
-            </Link>
-            <Link 
-              href="/login" 
-              className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100"
-              onClick={toggleMenu}
-            >
-              <User size={18} className="mr-3" />
-              <span>Login</span>
-            </Link>
-          </div>
+      {menuOpen && (
+        <div className="md:hidden bg-white border-t shadow-md">
+          <ul className="flex flex-col p-4 space-y-2 text-gray-700 font-medium">
+            <li>
+              <Link href="/" onClick={() => setMenuOpen(false)}>
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop" onClick={() => setMenuOpen(false)}>
+                Shop
+              </Link>
+            </li>
+            <li>
+              <Link href="/category/shirts" onClick={() => setMenuOpen(false)}>
+                Shirts
+              </Link>
+            </li>
+            <li>
+              <Link href="/category/shoes" onClick={() => setMenuOpen(false)}>
+                Shoes
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/category/accessories"
+                onClick={() => setMenuOpen(false)}
+              >
+                Accessories
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" onClick={() => setMenuOpen(false)}>
+                About
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" onClick={() => setMenuOpen(false)}>
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link href="/login" onClick={() => setMenuOpen(false)}>
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link href="/cart" onClick={() => setMenuOpen(false)}>
+                Cart ({cartItemCount})
+              </Link>
+            </li>
+          </ul>
         </div>
       )}
-    </header>
-  );
-};
 
-export default Navbar;
+      {/* Search bar */}
+      {searchOpen && (
+        <div className="absolute top-full left-0 w-full bg-white border-b shadow-md p-4 z-50">
+          <form className="max-w-3xl mx-auto flex">
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="flex-grow border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 rounded-r hover:bg-blue-700"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      )}
+    </nav>
+  );
+}

@@ -1,29 +1,27 @@
-// types.ts (or inside your component file)
-
-export interface Breadcrumb {
-  label: string;
-  path: string;
-}
+// types.ts
 
 export interface Category {
   id: number;
   name: string;
   slug: string;
-  parent_name: string;
-  level: number;
-  breadcrumbs: Breadcrumb[];
+  image?: string | null;
+  product_count?: number; // optional, if you want to track number of products
 }
 
 export interface Product {
   id: number;
   name: string;
   slug: string;
-  category: Category;
-  price: number;
-  main_image: string;
-  is_featured: boolean;
-  in_stock: boolean;
-  stock_status: string;
-  original_price: string;
-  discounted_price: number;
+  base_price: string;
+  premium?: boolean;  // Add this line
+  discount_price: string | null;
+  featured_image: string | null;
+  category?: Category; // optional nested category if needed
 }
+export interface InstagramPost {
+  id: string;
+  image: string;
+  caption: string;
+  permalink: string;
+}
+

@@ -6,10 +6,29 @@ export const fetchProducts = async () => {
   return response.data;
 };
 
+
+
+
 export const fetchProductBySlug = async (slug: string) => {
   const response = await api.get(`/products/${slug}/`);
   return response.data;
 };
+
+
+
+
+export const fetchNewArrivals = async () => {
+  const response = await api.get('/products/new-arrivals/');
+  return response.data;
+};
+
+
+export const fetchFeaturedProducts = async () => {
+  const response = await api.get('/products/featured/');
+  return response.data; // array of featured products
+};
+
+
 
 export const fetchProductsByCategorySlug = async (slug: string) => {
   const response = await api.get(`/products/?category=${slug}`);

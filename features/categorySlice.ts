@@ -1,44 +1,40 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "@/lib/axios";
-export interface Category {
+
+interface Category {
   id: number;
   name: string;
+  image: string | null;
   slug: string;
-  children?: Category[];
-  product_count?: number;
+  product_count: number;
 }
 
-interface CategoriesState {
-  items: Category[];
+interface CategoryState {
+  data: Category[];
   loading: boolean;
   error: string | null;
 }
 
-// Initial state
-const initialState: CategoriesState = {
-  items: [],
+// Async thunk to fetch categories
+export const fetchCategories = createAsyncThunk<Category[]>(
+  "categories/fetchCategories",
+  async () => {
+    const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!baseURL) {
+      throw new Error("API base URL is not set in environment variables");
+    }
+    const res = await axios.get<Category[]>(`${baseURL}/products/categories/`);
+    return res.data;
+  }
+);
+
+const initialState: CategoryState = {
+  data: [],
   loading: false,
   error: null,
 };
 
-// Async thunk to fetch categories from API
-export const fetchCategories = createAsyncThunk<Category[]>(
-  "categories/fetchCategories",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get("/categories/");
-      // ✅ Extract only the array from the results key
-      return response.data.results;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data || "Failed to fetch categories"
-      );
-    }
-  }
-);
-
-// Slice
-const categoriesSlice = createSlice({
+const categorySlice = createSlice({
   name: "categories",
   initialState,
   reducers: {},
@@ -46,20 +42,16 @@ const categoriesSlice = createSlice({
     builder
       .addCase(fetchCategories.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
-      .addCase(
-        fetchCategories.fulfilled,
-        (state, action: PayloadAction<Category[]>) => {
-          state.loading = false;
-          state.items = action.payload;
-        }
-      )
+      .addCase(fetchCategories.fulfilled, (state, action: PayloadAction<Category[]>) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message ?? "Failed to load categories";
       });
   },
 });
 
-export default categoriesSlice.reducer;
+export default categorySlice.reducer;
